@@ -1,25 +1,50 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-    <h1>Let's draw like Van Gogh</h1>
-    <div>
-        <input type="radio" name="color" value="#ff3320" checked> Red<br>
-        <input type="radio" name="color" value="#c00001"> Dark Red<br>
-        <input type="radio" name="color" value="#0000fe"> Blue<br>
-        <input type="radio" name="color" value="#00ff01"> Green<br>
-        <input type="radio" name="color" value="#ffffff"> White
+    <div class="container">
+        <h1>Let's draw like Van Gogh</h1>
+        <div class="row">
+            <div class="col-xs-6">
+                <div>
+                    <label class="radio-inline">
+                        <input type="radio" name="color" value="#ff3320" checked> Red
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="color" value="#c00001"> Dark Red
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="color" value="#0000fe"> Blue
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="color" value="#00ff01"> Green
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="color" value="#ffffff"> White
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <div>
+                    <canvas id="canvas" width="512" height="384"></canvas>
+                </div>
+                <div class="pull-right">
+                    <input id="submitButton" class="btn btn-default" type="button" value="Let's see" data-loading-text="Loading...">
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <img id="resultImage"></img>
+            </div>
+        </div>
     </div>
-    <div>
-        <canvas id="canvas" width="512" height="384"></canvas>
-    </div>
-    <div>
-        <input id="submitButton" type="button" value="Let's see">
-    </div>
-    <img id="resultImage"></img>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='index.js') }}"></script>
 </body>
 </html>

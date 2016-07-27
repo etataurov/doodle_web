@@ -42,7 +42,7 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
-    basename, _ = os.path.splitext(args.style)
+    basename, _ = os.path.splitext(args.output)
     input_file = basename + args.semantic_ext
     with open(input_file, 'rb') as annotation:
         with open(args.output, 'wb') as output:

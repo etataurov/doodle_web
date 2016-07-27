@@ -46,16 +46,20 @@ $(function() {
       }
     }
     $('#canvas').mousedown(function(e){
-        var mouseX = e.pageX - this.offsetLeft;
-        var mouseY = e.pageY - this.offsetTop;
+        var mouseX = e.pageX - this.offsetLeft - $(this).parent().offset().left;
+        var mouseY = e.pageY - this.offsetTop - $(this).parent().offset().top ;
+        var offsetL = this.offsetLeft + $(this).parent().offset().left - 15;
+        var offsetT = this.offsetTop + $(this).parent().offset().top;
 
         paint = true;
-        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+        addClick(e.pageX - offsetL, e.pageY - offsetT);
         redraw();
     });
     $('#canvas').mousemove(function(e){
         if(paint){
-            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+            var offsetL = this.offsetLeft + $(this).parent().offset().left - 15;
+            var offsetT = this.offsetTop + $(this).parent().offset().top;
+            addClick(e.pageX - offsetL, e.pageY - offsetT, true);
             redraw();
         }
     });
@@ -79,10 +83,11 @@ $(function() {
                     dataType: 'json',
                     success: function(data) {
                             showResult(data.url);
+                            $('#submitButton').button('reset');
                             poll_interval=0;
                     },
                     error: function () {
-                            poll_interval=10000;
+                            poll_interval=5000;
                             setTimeout(function() {poll(filename)}, poll_interval);
                     },
             });
@@ -91,6 +96,7 @@ $(function() {
 
     $('#submitButton').click(function(e) {
         var formData = new FormData();
+        var $btn = $(this).button('loading');
         document.getElementById('canvas').toBlob(function(blob){
             // var img = context.getImageData(0, 0, 512, 384)
             // let file = new File(img.data, "image.png", {type : 'image/png'})

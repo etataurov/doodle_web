@@ -104,5 +104,4 @@ def annotation_picture(style):
 
 @app.route('/result/<filename>')
 def result(filename):
-    return send_from_directory(SAMPLES_FOLDER,
-                                   filename)
+    return send_from_directory(SAMPLES_FOLDER, filename)
