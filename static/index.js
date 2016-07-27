@@ -100,7 +100,7 @@ $(function() {
         document.getElementById('canvas').toBlob(function(blob){
             // var img = context.getImageData(0, 0, 512, 384)
             // let file = new File(img.data, "image.png", {type : 'image/png'})
-            formData.append("image", blob, "image.png");
+            formData.append("image", blob, "image.jpg");
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/upload', true);
             xhr.onload = function () {
@@ -112,6 +112,6 @@ $(function() {
               }
             };
             xhr.send(formData);
-        })
+        }, "image/jpeg", 1)
     })
 });

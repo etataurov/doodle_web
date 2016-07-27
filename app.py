@@ -47,8 +47,8 @@ class Converter:
         while not self._shutdown_thread:
             item = self.queue.get()
             container = self.client.create_container(
-                image="etataurov/mock_doodle",
-                command="--style=samples/Monet.jpg --output samples/{}.png".format(item),
+                image="alexjc/neural-doodle",
+                command="--style=samples/Monet.jpg --output samples/{}.png --device=cpu --iterations=40".format(item),
                 volumes=["/nd/samples"],
                 host_config=self.client.create_host_config(binds={
                     SAMPLES_FOLDER: {
@@ -59,6 +59,7 @@ class Converter:
             )
             self.client.start(container)
             self.client.wait(container)
+            print(self.client.logs(container))
             self.client.remove_container(container)
 
             with self.lock:
