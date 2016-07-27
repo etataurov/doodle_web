@@ -48,11 +48,11 @@ class Converter:
             item = self.queue.get()
             container = self.client.create_container(
                 image="etataurov/mock_doodle",
-                command="--style=/samples/Monet.jpg --output /samples/{}.png".format(item),
-                volumes=["/samples"],
+                command="--style=samples/Monet.jpg --output samples/{}.png".format(item),
+                volumes=["/nd/samples"],
                 host_config=self.client.create_host_config(binds={
                     SAMPLES_FOLDER: {
-                        'bind': '/samples',
+                        'bind': '/nd/samples',
                         'mode': 'rw'
                     }
                 })
