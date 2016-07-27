@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>Let's draw like Van Gogh</h1>
+    <div>
+        <input type="radio" name="color" value="#ff3320" checked> Red<br>
+        <input type="radio" name="color" value="#c00001"> Dark Red<br>
+        <input type="radio" name="color" value="#0000fe"> Blue<br>
+        <input type="radio" name="color" value="#00ff01"> Green<br>
+        <input type="radio" name="color" value="#ffffff"> White
+    </div>
+    <div>
+        <canvas id="canvas" width="512" height="384"></canvas>
+    </div>
+    <div>
+        <input id="submitButton" type="button" value="Let's see">
+    </div>
+    <img id="resultImage"></img>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+</body>
+</html>
