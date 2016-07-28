@@ -47,8 +47,8 @@ class Converter:
         while not self._shutdown_thread:
             item = self.queue.get()
             container = self.client.create_container(
-                image="alexjc/neural-doodle",
-                command="--style=samples/Monet.jpg --output samples/{}.png --device=cpu --iterations=40".format(item),
+                image="alexjc/neural-doodle:gpu",
+                command="--style=samples/Monet.jpg --output samples/{}.png --iterations=40".format(item),
                 volumes=["/nd/samples"],
                 host_config=self.client.create_host_config(binds={
                     SAMPLES_FOLDER: {
