@@ -87,7 +87,7 @@ $(function() {
                             poll_interval=0;
                     },
                     error: function () {
-                            poll_interval=5000;
+                            poll_interval=500;
                             setTimeout(function() {poll(filename)}, poll_interval);
                     },
             });

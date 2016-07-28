@@ -46,11 +46,11 @@ class Converter:
     def worker_function(self):
         while not self._shutdown_thread:
             item = self.queue.get()
-            subprocess.call(["../venv/bin/python", "../apply.py",
-            "--colors", "../pretrained/gen_doodles.hdf5colors.npy",
+            subprocess.call(["venv/bin/python", "apply.py",
+            "--colors", "pretrained/gen_doodles.hdf5colors.npy",
             "--target_mask", os.path.join(SAMPLES_FOLDER, "{}_mask.png".format(item)),
-            "--model", "../pretrained/starry_night.t7",
-            "--out_path", os.path.join(SAMPLES_FOLDER, "{}.png".format(item))])
+            "--model", "pretrained/starry_night.t7",
+            "--out_path", os.path.join(SAMPLES_FOLDER, "{}.png".format(item))], cwd=os.path.join(cwd, os.pardir))
 
             with self.lock:
                 self.in_progress.remove(item)
