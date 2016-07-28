@@ -8,7 +8,7 @@ $(function() {
     context.drawImage(outlineImage, 0, 0, 512, 384);
     var paint;
 
-    var colorRed = "#ff3320";
+    var colorRed = "#ff0000";
 
     $('input[type=radio][name=color]').change(function() {
         curColor = this.value

@@ -2,24 +2,25 @@ import os
 import uuid
 import queue
 import threading
-import docker
+import subprocess
+# import docker
 
 from flask import Flask, request, render_template, send_from_directory, jsonify, url_for, abort
 app = Flask(__name__)
 
 cwd = os.path.abspath(os.path.dirname(__file__))
-SAMPLES_FOLDER = os.path.join(cwd, "samples")
+SAMPLES_FOLDER = os.path.join(cwd, "online_doodle_files")
 
-styles = {
-    "monet": {
-        "original": "Monet.jpg",
-        "annotation": "Monet_sem.png",
-    },
-    "renoir": {
-        "original": "Renoir.jpg",
-        "annotation": "Renoir_sem.png"
-    }
-}
+# styles = {
+#     "monet": {
+#         "original": "Monet.jpg",
+#         "annotation": "Monet_sem.png",
+#     },
+#     "renoir": {
+#         "original": "Renoir.jpg",
+#         "annotation": "Renoir_sem.png"
+#     }
+# }
 
 class Converter:
     def __init__(self):
@@ -30,7 +31,6 @@ class Converter:
         self._shutdown_thread = False
         self.queue = queue.Queue()
 
-        self.client = docker.from_env()
         self.my_worker_thread = threading.Thread(target=self.worker_function)
         self.my_worker_thread.start()
 
@@ -46,21 +46,11 @@ class Converter:
     def worker_function(self):
         while not self._shutdown_thread:
             item = self.queue.get()
-            container = self.client.create_container(
-                image="alexjc/neural-doodle:gpu",
-                command="--style=samples/Monet.jpg --output samples/{}.png --iterations=40".format(item),
-                volumes=["/nd/samples"],
-                host_config=self.client.create_host_config(binds={
-                    SAMPLES_FOLDER: {
-                        'bind': '/nd/samples',
-                        'mode': 'rw'
-                    }
-                })
-            )
-            self.client.start(container)
-            self.client.wait(container)
-            print(self.client.logs(container))
-            self.client.remove_container(container)
+            subprocess.call(["../venv/bin/python", "../apply.py",
+            "--colors", "../pretrained/gen_doodles.hdf5colors.npy",
+            "--target_mask", os.path.join(SAMPLES_FOLDER, "{}_mask.png".format(item)),
+            "--model", "../pretrained/starry_night.t7",
+            "--out_path", os.path.join(SAMPLES_FOLDER, "{}.png".format(item))])
 
             with self.lock:
                 self.in_progress.remove(item)
@@ -91,7 +81,7 @@ def upload():
         file = request.files['image']
         if file:
             uid = str(uuid.uuid4())
-            filename = uid + "_sem.png"
+            filename = uid + "_mask.png"
             file.save(os.path.join(SAMPLES_FOLDER, filename))
             converter.convert(uid)
             return jsonify(uid=uid)
@@ -101,7 +91,7 @@ def upload():
 @app.route('/annotation/<style>.png')
 def annotation_picture(style):
     return send_from_directory(SAMPLES_FOLDER,
-                               styles[style]["annotation"])
+                               "style_mask.png")
 
 @app.route('/result/<filename>')
 def result(filename):
