@@ -11,16 +11,20 @@ app = Flask(__name__)
 cwd = os.path.abspath(os.path.dirname(__file__))
 SAMPLES_FOLDER = os.path.join(cwd, "online_doodle_files")
 
-# styles = {
-#     "monet": {
-#         "original": "Monet.jpg",
-#         "annotation": "Monet_sem.png",
-#     },
-#     "renoir": {
-#         "original": "Renoir.jpg",
-#         "annotation": "Renoir_sem.png"
-#     }
-# }
+styles = {
+    "monet": {
+        "original": "monet.jpg",
+        "annotation": "monet_mask.jpg",
+        "colors": "data/monet/gen_doodles.hdf5_colors.npy",
+        "model": "data/monet/model.t7"
+    },
+    "van_gogh": {
+        "original": "van_gogh.png",
+        "annotation": "van_gogh_mask.png",
+        "colors": "pretrained/gen_doodles.hdf5colors.npy",
+        "model": "pretrained/starry_night.t7"
+    }
+}
 
 class Converter:
     def __init__(self):
@@ -34,10 +38,10 @@ class Converter:
         self.my_worker_thread = threading.Thread(target=self.worker_function)
         self.my_worker_thread.start()
 
-    def convert(self, filename):
+    def convert(self, filename, style):
         with self.lock:
             self.in_progress.add(filename)
-        self.queue.put(filename)
+        self.queue.put((filename, style))
 
     def is_ready(self, filename):
         with self.lock:
@@ -45,11 +49,13 @@ class Converter:
 
     def worker_function(self):
         while not self._shutdown_thread:
-            item = self.queue.get()
+            item, style = self.queue.get()
+            colors = styles[style]["colors"]
+            model = styles[style]["models"]
             subprocess.call(["venv/bin/python", "apply.py",
-            "--colors", "pretrained/gen_doodles.hdf5colors.npy",
+            "--colors", colors,
             "--target_mask", os.path.join(SAMPLES_FOLDER, "{}_mask.png".format(item)),
-            "--model", "pretrained/starry_night.t7",
+            "--model", model,
             "--out_path", os.path.join(SAMPLES_FOLDER, "{}.png".format(item))], cwd=os.path.join(cwd, os.pardir))
 
             with self.lock:
@@ -79,11 +85,12 @@ def ready(uid):
 def upload():
     if request.method == 'POST':
         file = request.files['image']
+        style = request.form.get("style")
         if file:
             uid = str(uuid.uuid4())
             filename = uid + "_mask.png"
             file.save(os.path.join(SAMPLES_FOLDER, filename))
-            converter.convert(uid)
+            converter.convert(uid, style)
             return jsonify(uid=uid)
     return jsonify(error="no file")
 
@@ -91,7 +98,7 @@ def upload():
 @app.route('/annotation/<style>.png')
 def annotation_picture(style):
     return send_from_directory(SAMPLES_FOLDER,
-                               "style_mask.png")
+                               styles[style]["annotation"])
 
 @app.route('/result/<filename>')
 def result(filename):

@@ -3,9 +3,12 @@ $(function() {
     var clickX = new Array();
     var clickY = new Array();
     var clickDrag = new Array();
+    var clickColor = new Array();
     var outlineImage = new Image();
     outlineImage.src = "annotation/monet.png"
-    context.drawImage(outlineImage, 0, 0, 512, 384);
+    outlineImage.onload = function () {
+        context.drawImage(outlineImage, 0, 0, 512, 384);
+    }
     var paint;
 
     var colorRed = "#ff0000";
@@ -14,8 +17,15 @@ $(function() {
         curColor = this.value
     });
 
+    $('input[type=radio][name=style]').change(function() {
+        clickX = new Array();
+        clickY = new Array();
+        clickDrag = new Array();
+        clickColor = new Array();
+        outlineImage.src = "annotation/" + this.value + ".png";
+    });
+
     var curColor = colorRed;
-    var clickColor = new Array();
 
     function addClick(x, y, dragging)
     {
@@ -101,6 +111,7 @@ $(function() {
             // var img = context.getImageData(0, 0, 512, 384)
             // let file = new File(img.data, "image.png", {type : 'image/png'})
             formData.append("image", blob, "image.jpg");
+            formData.append("style", $('input[type=radio][name=style]:checked').val())
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/upload', true);
             xhr.onload = function () {
