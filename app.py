@@ -51,7 +51,7 @@ class Converter:
         while not self._shutdown_thread:
             item, style = self.queue.get()
             colors = styles[style]["colors"]
-            model = styles[style]["models"]
+            model = styles[style]["model"]
             subprocess.call(["venv/bin/python", "apply.py",
             "--colors", colors,
             "--target_mask", os.path.join(SAMPLES_FOLDER, "{}_mask.png".format(item)),
