@@ -23,6 +23,12 @@ styles = {
         "annotation": "van_gogh_mask.png",
         "colors": "pretrained/gen_doodles.hdf5colors.npy",
         "model": "pretrained/starry_night.t7"
+    },
+    "agay_bay": {
+        "original": "agay-bay-1910.jpg",
+        "annotation": "agay-bay-1910-mask.jpegg",
+        "colors": "data/agay_bay/gen_doodles.hdf5_colors.npy",
+        "model": "data/agay_bay/model.t7"
     }
 }
 
