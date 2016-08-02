@@ -32,6 +32,8 @@ styles = {
     }
 }
 
+MOUNT_FOLDER = "/root/doodle/"
+
 class Converter:
     def __init__(self):
         self.lock = threading.Lock()
@@ -58,11 +60,14 @@ class Converter:
             item, style = self.queue.get()
             colors = styles[style]["colors"]
             model = styles[style]["model"]
-            subprocess.call(["venv/bin/python", "apply.py",
-            "--colors", colors,
-            "--target_mask", os.path.join(SAMPLES_FOLDER, "{}_mask.png".format(item)),
-            "--model", model,
-            "--out_path", os.path.join(SAMPLES_FOLDER, "{}.png".format(item))], cwd=os.path.join(cwd, os.pardir))
+            subprocess.call(["nvidia-docker", "run", "-v",
+            "/data/repos/online-neural-doodle/:/root/data",
+            "-v", "/data/repos/doodle_web/online_doodle_files:/root/doodle/",
+            "conv_image", "apply.py",
+            "--colors", "/root/data/" + colors,
+            "--target_mask", os.path.join(MOUNT_FOLDER, "{}_mask.png".format(item)),
+            "--model", "/root/data/" + model,
+            "--out_path", os.path.join(MOUNT_FOLDER, "{}.png".format(item))], cwd=os.path.join(cwd, os.pardir))
 
             with self.lock:
                 self.in_progress.remove(item)
