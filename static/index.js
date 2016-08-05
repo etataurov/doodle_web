@@ -5,7 +5,7 @@ $(function() {
     var clickDrag = new Array();
     var clickColor = new Array();
     var outlineImage = new Image();
-    outlineImage.src = "annotation/monet.png"
+    outlineImage.src = "annotation/van_gogh.png"
     outlineImage.onload = function () {
         context.drawImage(outlineImage, 0, 0, 512, 384);
     }

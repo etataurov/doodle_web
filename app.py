@@ -63,7 +63,7 @@ class Converter:
             subprocess.call(["nvidia-docker", "run", "-v",
             "/data/repos/online-neural-doodle/:/root/data",
             "-v", "/data/repos/doodle_web/online_doodle_files:/root/doodle/",
-            "conv_image", "apply.py",
+            "conv_image2", "apply.py",
             "--colors", "/root/data/" + colors,
             "--target_mask", os.path.join(MOUNT_FOLDER, "{}_mask.png".format(item)),
             "--model", "/root/data/" + model,
